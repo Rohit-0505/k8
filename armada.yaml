@@ -1,0 +1,121 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt
+data:
+  chart_name: libvirt
+  release: libvirt
+  namespace: default
+  wait:
+    timeout: 600
+  protected:
+    continue_processing: false
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+  values:
+#    labels:
+#      agent:
+#        libvirt:
+#          node_selector_key: openstack-compute-node
+#          node_selector_value: enabled
+    network:
+      backend: null
+    conf:
+      ceph:
+        enabled: false
+      qemu:
+        user: 'nova'
+  source:
+    type: git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
+    subpath: libvirt
+    reference: master
+  dependencies:
+    - helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: metallb
+data:
+  chart_name: metallb
+  release: metallb
+  namespace: metallb-system
+  wait:
+   timeout: 600
+   resources:
+     - type: deployment
+   labels:
+     component: controller
+  protected:
+    continue_processing: false
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+  values:
+    configInline:
+      peers:
+      - peer-address: 10.10.93.129
+        peer-asn: 64501
+        my-asn: 64500
+      address-pools:
+      - name: default
+        protocol: bgp
+        addresses:
+        - 10.10.93.192/27
+  source:
+    type: git
+    location: https://github.com/helm/charts.git
+    subpath: stable/metallb
+    reference: master
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: helm-toolkit
+data:
+  chart_name: helm-toolkit
+  release: helm-toolkit
+  namespace: helm-tookit
+  wait:
+    timeout: 600
+  values: {}
+  source:
+    type: git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
+    subpath: helm-toolkit
+    reference: master
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt-group
+data:
+  description: Deploys libvirt daemon for managing platform virtualization
+  sequenced: True
+  chart_group:
+    - libvirt
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: metallb-group
+data:
+  description: Deploys metallb
+  sequenced: True
+  chart_group:
+    - metallb
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: simple-armada
+data:
+  release_prefix: armada
+  chart_groups:
+    - libvirt-group
+#    - metallb-group
