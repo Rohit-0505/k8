@@ -52,56 +52,56 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Apply Flannel CNI network overlay:
-# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-sudo kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
+sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# sudo kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 
 
 #Join the worker nodes to the cluster:
 # kubeadm join [your unique string from the kubeadm init command]
 #Verify the worker nodes have joined the cluster successfully:
 
+sleep 10
+
 kubectl get nodes
 
 
+######  Install and configure Helm ########
 
-sleep 20
-
-
-# Install Helm On Linux
-
-curl -L https://git.io/get_helm.sh | bash -s -- --version v2.14.3
-
-
-kubectl taint node ubuntu node-role.kubernetes.io/master-
-#kubectl label nodes --all openstack-control-plane=enabled
-#kubectl label nodes --all ucp-control-plane=enabled
-kubectl label nodes --all openstack-compute-node=enabled
-
-sudo apt-get install -y nfs-common python-pip
-
-cat << EOF | sudo tee /home/bala/rbac-config.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system
-EOF
-
-kubectl apply -f rbac-config.yaml
-
-# and then update helm instalation to use serviceAccount:
-
-helm init --service-account tiller --upgrade
+## Install Helm On Linux
+#
+#curl -L https://git.io/get_helm.sh | bash -s -- --version v2.14.3
+#
+#
+#kubectl taint node ubuntu node-role.kubernetes.io/master-
+##kubectl label nodes --all openstack-control-plane=enabled
+##kubectl label nodes --all ucp-control-plane=enabled
+#kubectl label nodes --all openstack-compute-node=enabled
+#
+#sudo apt-get install -y nfs-common python-pip
+#
+#cat << EOF | sudo tee /home/bala/rbac-config.yaml
+#apiVersion: v1
+#kind: ServiceAccount
+#metadata:
+#  name: tiller
+#  namespace: kube-system
+#---
+#apiVersion: rbac.authorization.k8s.io/v1
+#kind: ClusterRoleBinding
+#metadata:
+#  name: tiller
+#roleRef:
+#  apiGroup: rbac.authorization.k8s.io
+#  kind: ClusterRole
+#  name: cluster-admin
+#subjects:
+#  - kind: ServiceAccount
+#    name: tiller
+#    namespace: kube-system
+#EOF
+#
+#kubectl apply -f rbac-config.yaml
+#
+## and then update helm instalation to use serviceAccount:
+#
+#helm init --service-account tiller --upgrade
