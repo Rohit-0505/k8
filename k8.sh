@@ -25,7 +25,7 @@ sudo apt-get update
 
 # Install Docker, kubelet, kubeadm, and kubectl:
 
-sudo apt-get install -y docker-ce=18.06.1~ce~3-0~ubuntu kubelet=1.15.3-00 kubeadm=1.15.3-00 kubectl=1.15.3-00
+sudo apt-get install -y docker.io kubelet=1.18.0-00 kubeadm=1.18.0-00 kubectl=1.18.0-00
 
 # Hold them at the current version:
 
@@ -52,8 +52,8 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Apply Flannel CNI network overlay:
-sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-# sudo kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
+# sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+sudo kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 
 
 #Join the worker nodes to the cluster:
