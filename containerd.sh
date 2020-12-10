@@ -82,6 +82,7 @@ systemctl daemon-reload
 
 swapoff -a
 sysctl net.ipv4.ip_forward=1
+sysctl net.bridge.bridge-nf-call-iptables=1
 
 
 kubeadm init --cri-socket /run/containerd/containerd.sock --pod-network-cidr=192.168.0.0/16
