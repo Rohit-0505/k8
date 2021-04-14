@@ -1,0 +1,67 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: litmus-chaosexperiments
+  labels:
+    component: litmus-chaosexperiments
+  storagePolicy: cleartext
+data:
+  chart_name: litmus-chaosexperiments
+  release: litmus-chaosexperiments
+  namespace: litmus
+  wait:
+    timeout: 300
+  values:
+    namespace: litmus
+    experiments:
+      pod_delete:
+        enabled: true
+      network_latency:
+        enabled: true
+      network_loss:
+        enabled: true
+  source:
+    type: tar
+    location: 
+    subpath: chaosexperiments
+  dependencies:
+    - litmus
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: litmus
+  labels:
+    component: litmus
+  storagePolicy: cleartext
+data:
+  chart_name: litmus
+  release: litmus
+  namespace: litmus
+  wait:
+    timeout: 300
+  source:
+    type: tar
+    location: 
+    subpath: litmus
+  dependencies: []
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: chaos-services
+data:
+  description: Deploy Litmus and chaosexperiments
+  sequenced: True
+  chart_group:
+    - litmus-chaosexperiments
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: litmus-armada
+data:
+  release_prefix: armada
+  chart_groups:
+    - chaos-services
