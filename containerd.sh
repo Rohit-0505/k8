@@ -101,4 +101,4 @@ kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 systemctl daemon-reload
 systemctl restart kubelet
 
-# kubectl taint node ubuntu node-role.kubernetes.io/master-
+kubectl taint node ubuntu node-role.kubernetes.io/master-
