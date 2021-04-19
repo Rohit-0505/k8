@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-deployment-1
+  labels:
+    name: networkchaos
+spec:
+  selector:
+    matchLabels:
+      name: networkchaos
+  template:
+    metadata:
+      labels:
+        name: networkchaos
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+          - sleep
+          - "36000"
+        imagePullPolicy: IfNotPresent
+        name: busybox
