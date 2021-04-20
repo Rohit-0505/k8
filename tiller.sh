@@ -2,7 +2,7 @@
 
 # Install Helm On Linux
 
-#curl -L https://git.io/get_helm.sh | bash -s -- --version v2.16.3
+curl -L https://git.io/get_helm.sh | bash -s -- --version v2.16.3
 
 
 #sudo apt-get install -y nfs-common python-pip
