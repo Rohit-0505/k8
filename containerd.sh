@@ -91,14 +91,15 @@ mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
-kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
+kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
 #/var/lib/kubelet/config.yaml
 #apiVersion: kubelet.config.k8s.io/v1beta1
 #kind: KubeletConfiguration
 #cgroupDriver: systemd
 
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
 systemctl daemon-reload
 systemctl restart kubelet
-
-kubectl taint node ubuntu node-role.kubernetes.io/master-
