@@ -30,12 +30,12 @@ fi
 # Get the tiller Port
 tiller_port=$(kubectl get svc -n kube-system -o wide | awk '/tiller/ {print $5}' | cut -c7-11)
 #tiller_ip=$(kubectl get pods -n kube-system -o wide | awk '/tiller/ {print $6}')
-tiller_ip=32.68.220.14
+tiller_ip=
 
 # add tiller ip to no_proxy
 export no_proxy=$no_proxy,$tiller_ip
-http_proxy=http://one.proxy.att.com:8888
-https_proxy=http://one.proxy.att.com:8888
+http_proxy=""
+https_proxy=""
 # Download latest Armada image and deploy Airship components
 docker run --rm --net host -p 8000:8000 --name armada \
     -v ~/.kube/config:/armada/.kube/config \
